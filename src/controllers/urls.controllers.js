@@ -24,7 +24,7 @@ export async function getShortUrl(req,res){
     const {id:idUrl} = req.params;
     try {
         const objUrl = await db.query(`SELECT * FROM urls WHERE id=$1`,[idUrl]);
-        if(!objUrl.rowCount) return res.status(404).send("Url não encontrada!")
+        if(!objUrl.rowCount) return res.status(404).send("Url não encontrada!");
         const {id,urlShort:shortUrl,urlDefault:url} = objUrl.rows[0];
         res.send({id, shortUrl,url});
     } catch (err) {
@@ -33,8 +33,15 @@ export async function getShortUrl(req,res){
 }
 
 export async function openShortUrl(req,res){
+    const {shortUrl} = req.params;
     try {
-        res.send("url diminuida aberta");
+        const objUrl = await db.query(
+            `UPDATE urls 
+                SET visits=visits+1 
+                WHERE "urlShort"=$1 
+                RETURNING "urlDefault"`,[shortUrl]);
+        if(!objUrl.rowCount) return res.status(404).send("Url não encontrada!");
+        res.redirect(objUrl.rows[0].urlDefault);
     } catch (err) {
         res.status(500).send(err.message);
     }

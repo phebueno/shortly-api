@@ -13,7 +13,7 @@ export async function shortenUrl(req,res){
             RETURNING id;
             `,[url,userId]);
         const id = addUrl.rows[0].id;
-        res.send({id, shortUrl});
+        res.status(201).send({id, shortUrl});
     } catch (err) {
         console.log(err.detail);
         const message = err.detail ? err.detail : err.message.detail;

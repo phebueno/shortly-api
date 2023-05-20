@@ -7,11 +7,12 @@ export async function signup(req, res) {
 
   try {
     const addUser = await db.query(
-        `INSERT INTO users (name,email,password,"createdAt")
+      `INSERT INTO users (name,email,password,"createdAt")
             VALUES ($1,$2,$3,NOW())
             ON CONFLICT DO NOTHING`,
-            [name,email,passwordHash]);
-    if(!addUser.rowCount) return res.status(409).send("Email já cadastrado!");
+      [name, email, passwordHash]
+    );
+    if (!addUser.rowCount) return res.status(409).send("Email já cadastrado!");
     res.status(201).send("Usuário cadastrado!");
   } catch (err) {
     res.status(500).send(err.message);
@@ -19,5 +20,13 @@ export async function signup(req, res) {
 }
 
 export async function signin(req, res) {
-  res.send("signin");
+  const { email, password } = req.body;
+  try {
+    const login = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+    if (!bcrypt.compareSync(password, login.rows[0].password))
+      return res.status(401).send("Senha incorreta.");
+    res.send({ token: "blabla" });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 }

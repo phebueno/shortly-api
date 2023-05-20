@@ -1,5 +1,6 @@
 import { db } from "../database/database.connection.js";
 import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
 
 export async function signup(req, res) {
   const { name, email, password } = req.body;
@@ -23,9 +24,19 @@ export async function signin(req, res) {
   const { email, password } = req.body;
   try {
     const login = await db.query(`SELECT * FROM users WHERE email=$1`, [email]);
+
+    if (!login.rowCount) return res.status(401).send("Email não cadastrado.");
     if (!bcrypt.compareSync(password, login.rows[0].password))
       return res.status(401).send("Senha incorreta.");
-    res.send({ token: "blabla" });
+      
+    //Criação de sessão
+    const token = uuid();
+    await db.query(
+      `INSERT INTO sessions ("userId",token,"createdAt")
+            VALUES ($1,$2,NOW())`,
+      [login.rows[0].id, token]
+    );
+    res.send({ token });
   } catch (err) {
     res.status(500).send(err.message);
   }

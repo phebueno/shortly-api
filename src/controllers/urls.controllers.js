@@ -21,8 +21,12 @@ export async function shortenUrl(req,res){
 }
 
 export async function getShortUrl(req,res){
+    const {id:idUrl} = req.params;
     try {
-        res.send("url diminuida recebida");
+        const objUrl = await db.query(`SELECT * FROM urls WHERE id=$1`,[idUrl]);
+        if(!objUrl.rowCount) return res.status(404).send("Url não encontrada!")
+        const {id,urlShort:shortUrl,urlDefault:url} = objUrl.rows[0];
+        res.send({id, shortUrl,url});
     } catch (err) {
         res.status(500).send(err.message);
     }

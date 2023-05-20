@@ -2,7 +2,7 @@ import { db } from "../database/database.connection.js";
 import {nanoid} from "nanoid";
 
 export async function shortenUrl(req,res){
-    const userId = 1; //recuperar ID por validação do usuário
+    const userId = res.locals.user.id; //recuperar ID por validação do usuário
     const {url} = req.body;
     const shortUrl = nanoid(8);
 

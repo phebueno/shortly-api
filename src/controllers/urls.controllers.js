@@ -48,8 +48,18 @@ export async function openShortUrl(req,res){
 }
 
 export async function deleteShortUrl(req,res){
+    const {id:idUrl} = req.params;
+    const userId = res.locals.user.id;
     try {
-        res.send("url diminuida deletada");
+        const objUrl = await db.query(
+            `DELETE FROM urls 
+                WHERE id=$1 AND "userId"=$2`,[idUrl,userId]);
+        if(!objUrl.rowCount) {
+            const checkUrl = await db.query(`SELECT * FROM urls WHERE id=$1`,[idUrl]);
+            if(checkUrl.rowCount) return res.sendStatus(401);
+            else return res.status(404).send("Url não encontrada!");
+        }
+        res.sendStatus(204);
     } catch (err) {
         res.status(500).send(err.message);
     }

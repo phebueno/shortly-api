@@ -18,6 +18,6 @@ urlsRouter.post(
 );
 urlsRouter.get("/urls/:id", getShortUrl);
 urlsRouter.get("/urls/open/:shortUrl", openShortUrl);
-urlsRouter.delete("/urls/:id", deleteShortUrl);
+urlsRouter.delete("/urls/:id", validateAuth, deleteShortUrl);
 
 export default urlsRouter;

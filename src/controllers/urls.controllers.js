@@ -15,7 +15,6 @@ export async function shortenUrl(req,res){
         const id = addUrl.rows[0].id;
         res.status(201).send({id, shortUrl});
     } catch (err) {
-        console.log(err.detail);
         const message = err.detail ? err.detail : err.message.detail;
         res.status(500).send(message);
     }

@@ -1,4 +1,3 @@
-import { db } from "../database/database.connection.js";
 import { nanoid } from "nanoid";
 import { addVisitShortUrlById, deleteShortUrlByIdDB, getShortUrlByIdDB, insertShortUrlDB } from "../repositories/urls.repository.js";
 

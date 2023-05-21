@@ -1,4 +1,3 @@
-import { db } from "../database/database.connection.js";
 import { getUserFromSessionTokenDB } from "../repositories/auth.repository.js";
 
 export async function validateAuth(req,res,next) {

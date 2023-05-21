@@ -1,4 +1,3 @@
-import { db } from "../database/database.connection.js";
 import { getUsersRankingDB, getUserUrlsInfoDB } from "../repositories/users.repository.js";
 
 export async function getUserData(req, res) {

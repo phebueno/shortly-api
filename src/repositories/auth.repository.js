@@ -22,3 +22,12 @@ export function newSessionDB(token,login){
         [login.rows[0].id, token]
       );
 }
+
+export function getUserFromSessionTokenDB(token){
+  return db.query(
+    `SELECT * FROM users 
+        WHERE id=
+        (SELECT "userId" FROM sessions 
+        WHERE token=$1
+)`,[token])
+}

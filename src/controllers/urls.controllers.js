@@ -36,13 +36,11 @@ export async function openShortUrl(req, res) {
 }
 
 export async function deleteShortUrl(req, res) {
-  const { id: idUrl } = req.params;
   try {
     const objUrl = await deleteShortUrlByIdDB(req.params,res.locals);
     if (!objUrl.rowCount) {
-      const checkUrl = await db.query(`SELECT * FROM urls WHERE id=$1`, [
-        idUrl,
-      ]);
+      //È A MESMA FUNÇÃO EMBAIXO!!!
+      const checkUrl = await getShortUrlByIdDB(req.params)
       if (checkUrl.rowCount) return res.sendStatus(401);
       else return res.status(404).send("Url não encontrada!");
     }

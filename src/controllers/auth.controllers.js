@@ -26,8 +26,7 @@ export async function signin(req, res) {
     //Criação de sessão
     const token = uuid();
     await newSessionDB(token,login);
-    res.cookie('username',login.rows[0].name);
-    res.send({ token });
+    res.send({name:login.rows[0].name, token });
   } catch (err) {
     res.status(500).send(err.message);
   }
